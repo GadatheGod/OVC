@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🚀 OVC-1: Orbital Vacuum Cleaner</title>
+    <style>
+        /* -------- RESET & BASE -------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0b0e1a;
+            background-image:
+                radial-gradient(ellipse at 20% 50%, rgba(10, 40, 80, 0.3) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 50%, rgba(80, 10, 40, 0.2) 0%, transparent 60%);
+            font-family: 'Segoe UI', 'Courier New', monospace;
+            color: #d0d8e8;
+            padding: 2rem 1.5rem;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* -------- CONTAINER -------- */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(11, 14, 30, 0.85);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(100, 180, 255, 0.12);
+            border-radius: 32px;
+            padding: 2.5rem 2.8rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+        }
+
+        /* -------- TYPOGRAPHY -------- */
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #7fc8ff, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+            margin-bottom: 0.2rem;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #7a8aa8;
+            border-left: 3px solid #4f7db3;
+            padding-left: 1.2rem;
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-top: 2.8rem;
+            margin-bottom: 1rem;
+            color: #b6ccf0;
+            border-bottom: 1px solid rgba(100, 180, 255, 0.15);
+            padding-bottom: 0.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            color: #9bb4da;
+            margin-top: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        a {
+            color: #7fc8ff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* -------- ASCII ART (monospace) -------- */
+        .ascii-box {
+            background: #0f1424;
+            border: 1px solid #2a3a5a;
+            border-radius: 16px;
+            padding: 1.5rem 1.2rem;
+            margin: 1.2rem 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.3;
+            color: #aac3e8;
+            white-space: pre;
+            box-shadow: inset 0 0 30px rgba(0, 20, 40, 0.6);
+        }
+
+        /* -------- TABLES -------- */
+        .table-wrap {
+            overflow-x: auto;
+            margin: 1.2rem 0;
+            border-radius: 12px;
+            border: 1px solid #1f2d44;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.92rem;
+            background: #0d1225;
+        }
+
+        th {
+            background: #1a2742;
+            color: #b6ccf0;
+            font-weight: 600;
+            padding: 0.7rem 1rem;
+            text-align: left;
+            border-bottom: 2px solid #2f4368;
+        }
+
+        td {
+            padding: 0.6rem 1rem;
+            border-bottom: 1px solid #1a2742;
+            color: #c8d6ec;
+        }
+
+        tr:hover td {
+            background: rgba(60, 120, 200, 0.05);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.1rem 0.7rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+        }
+        .badge-green {
+            background: #0f3b2a;
+            color: #6fdfb0;
+        }
+        .badge-yellow {
+            background: #3d2f0f;
+            color: #eac76f;
+        }
+        .badge-red {
+            background: #3d0f0f;
+            color: #ef7a7a;
+        }
+        .badge-gray {
+            background: #1a1f2e;
+            color: #8899bb;
+        }
+
+        /* -------- METHOD CARDS (matrix replacement) -------- */
+        .method-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.2rem 0;
+        }
+
+        .method-card {
+            background: #0f1428;
+            border: 1px solid #253553;
+            border-radius: 14px;
+            padding: 1rem 1.2rem;
+            transition: 0.2s;
+        }
+        .method-card:hover {
+            border-color: #4f7db3;
+            background: #131b33;
+        }
+        .method-card .emoji {
+            font-size: 1.8rem;
+        }
+        .method-card .name {
+            font-weight: 700;
+            font-size: 1rem;
+            color: #d0def0;
+        }
+        .method-card .vibe {
+            font-size: 0.75rem;
+            color: #8899bb;
+            margin: 0.2rem 0 0.4rem;
+        }
+        .method-card .status {
+            font-size: 0.8rem;
+        }
+
+        /* -------- MATH / CODE BLOCKS -------- */
+        .math-block {
+            background: #0a0e1c;
+            border-left: 3px solid #4f7db3;
+            padding: 1.2rem 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #b6ccf0;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .math-block .comment {
+            color: #5a7a9a;
+        }
+
+        /* -------- SEQUENCE STEPS (5 acts) -------- */
+        .act {
+            background: #0d1225;
+            border-left: 4px solid #4f7db3;
+            padding: 1rem 1.5rem;
+            margin: 1rem 0;
+            border-radius: 0 12px 12px 0;
+        }
+        .act .act-title {
+            font-weight: 700;
+            color: #b6ccf0;
+            font-size: 1.05rem;
+        }
+        .act .act-desc {
+            color: #a0b4d0;
+            margin-top: 0.2rem;
+        }
+
+        /* -------- FOOTER / BADGES -------- */
+        .footer-meta {
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #1f2d44;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            color: #5a7a9a;
+            font-size: 0.85rem;
+        }
+
+        .footer-meta .stars {
+            color: #eac76f;
+        }
+
+        .repo-structure {
+            background: #0a0e1c;
+            border-radius: 12px;
+            padding: 1rem 1.8rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            color: #7a9abb;
+            margin: 1rem 0;
+            border: 1px solid #1a2742;
+        }
+
+        .repo-structure .folder {
+            color: #7fc8ff;
+        }
+        .repo-structure .file {
+            color: #aac3e8;
+        }
+
+        /* -------- RESPONSIVE -------- */
+        @media (max-width: 640px) {
+            body {
+                padding: 0.8rem;
+            }
+            .container {
+                padding: 1.2rem;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+            .method-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .footer-meta {
+                flex-direction: column;
+                gap: 0.5rem;
+                align-items: flex-start;
+            }
+        }
+
+        /* small scrollbar tweak */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0e1c;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2f4368;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- ===== HEADER ===== -->
+        <h1>🚀 OVC‑1: ORBITAL VACUUM CLEANER</h1>
+        <div class="subtitle">
+            <span style="color:#7a8aa8;">“Because space shouldn't look like my teenager's bedroom floor.”</span>
+            <span style="display:inline-block;margin-left:1.2rem;background:#1a2742;padding:0.1rem 0.8rem;border-radius:20px;font-size:0.7rem;color:#7fc8ff;">v1.0 · 2026</span>
+        </div>
+
+        <!-- ===== MISSION PATCH (ASCII) ===== -->
+        <div class="ascii-box">
+            .-.
+           /   \       MISSION OVC-1
+          |     |      "CLEANING UP THE COSMIC MESS"
+           \   /       SINCE: 2026
+            `-`
+          ___|___
+         /  NET  \     ← The Big Catch
+        |  ( )   |
+         \_____/
+            |
+           / \
+          /   \        ← Magnetic De‑Tumble Rays (patent pending)
+         /     \
+        /_______\
+       (  EARTH  )     ← Still spinning, still beautiful
+        `-----`
+        </div>
+
+        <!-- ===== TABLE: NUMBERS ===== -->
+        <h2>🗑️ The Problem: Space Is a Dumpster Fire</h2>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr><th>Metric</th><th>Value</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Tracked debris &gt; 10 cm</td><td>36,500</td></tr>
+                    <tr><td>Tracked debris &gt; 1 cm</td><td>1,000,000+</td></tr>
+                    <tr><td>Fragments &gt; 1 mm</td><td>130,000,000</td></tr>
+                    <tr><td>ISS collision avoidance maneuvers / year</td><td>~25</td></tr>
+                    <tr><td>Cost if we do nothing</td><td><span style="color:#ef7a7a;">Kessler cascade by 2050</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ===== SOLUTION ===== -->
+        <h2>🧹 The Solution: We're the Janitors</h2>
+        <div style="background:#0d1225;border-radius:14px;padding:1.2rem 1.8rem;border:1px solid #1f2d44;margin:0.8rem 0;">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.3rem 2rem;">
+                <div><span style="color:#7a8aa8;">Mass</span> 500 kg</div>
+                <div><span style="color:#7a8aa8;">Power</span> 10 kW solar array</div>
+                <div><span style="color:#7a8aa8;">Propulsion</span> Ion thrusters (Iₛₚ 3,000 s)</div>
+                <div><span style="color:#7a8aa8;">Capture</span> Net + Magnetic + Harpoon (Plan B)</div>
+                <div><span style="color:#7a8aa8;">De‑tumble</span> Eddy‑current braking</div>
+                <div><span style="color:#7a8aa8;">Fail‑safe</span> Retrograde self‑deorbit</div>
+            </div>
+        </div>
+
+        <!-- ===== METHOD GRID (cards) ===== -->
+        <h2>📊 Methodology Matrix</h2>
+        <div class="method-grid">
+            <div class="method-card">
+                <div class="emoji">🥅</div>
+                <div class="name">Net Capture</div>
+                <div class="vibe">TRL 7 · 🐱👤 Stealth</div>
+                <div class="status"><span class="badge badge-green">✅ Primary</span> High effectiveness</div>
+            </div>
+            <div class="method-card">
+                <div class="emoji">🧲</div>
+                <div class="name">Magnetic (Eddy)</div>
+                <div class="vibe">TRL 5 · 🧙✨ Wizard</div>
+                <div class="status"><span class="badge badge-green">✅ De‑tumble</span> Low risk, medium force</div>
+            </div>
+            <div class="method-card">
+                <div class="emoji">💨</div>
+                <div class="name">Ion Beam Shepherd</div>
+                <div class="vibe">TRL 4 · 🌬️ Gentle push</div>
+                <div class="status"><span class="badge badge-yellow">⚠️ Backup</span> Slow but safe</div>
+            </div>
+            <div class="method-card">
+                <div class="emoji">🔱</div>
+                <div class="name">Harpoon</div>
+                <div class="vibe">TRL 6 · 💪 YOLO</div>
+                <div class="status"><span class="badge badge-red">❌ Desperate</span> High risk of shrapnel</div>
+            </div>
+            <div class="method-card">
+                <div class="emoji">☀️</div>
+                <div class="name">Laser Ablation</div>
+                <div class="vibe">TRL 4 · 🔥 Death Ray</div>
+                <div class="status"><span class="badge badge-gray">❌ Too sci‑fi</span> Low TRL, expensive</div>
+            </div>
+            <div class="method-card">
+                <div class="emoji">🤖</div>
+                <div class="name">Robotic Arm</div>
+                <div class="vibe">TRL 6 · 🧠 Big Brain</div>
+                <div class="status"><span class="badge badge-yellow">⚠️ Complex</span> Precision, but costly</div>
+            </div>
+        </div>
+
+        <!-- ===== MAGNETIC DE-TUMBLE ===== -->
+        <h2>🧲 Magnetic De‑Tumbling: The “Stop Spinning, You Maniac” Module</h2>
+        <div style="display:flex;flex-wrap:wrap;gap:0.8rem;align-items:flex-start;">
+            <div style="flex:2;min-width:240px;">
+                <p style="color:#a0b4d0;margin-bottom:0.3rem;"><strong>How it works:</strong></p>
+                <ul style="color:#a0b4d0;padding-left:1.2rem;">
+                    <li>OVC‑1 approaches spinning debris.</li>
+                    <li>Deploys a 1‑Tesla magnetic array.</li>
+                    <li>Magnetic field induces <strong>eddy currents</strong> in the debris’s conductive metal.</li>
+                    <li>These currents create a drag force (Lorentz force) that slows rotation.</li>
+                </ul>
+            </div>
+            <div style="flex:1;min-width:160px;background:#0a0e1c;border-radius:12px;padding:0.8rem 1.2rem;border:1px solid #1f2d44;">
+                <div style="font-size:0.8rem;color:#7a8aa8;">MATH (simplified)</div>
+                <div style="font-family:'Courier New',monospace;font-size:0.8rem;color:#b6ccf0;">
+                    m = 1000 kg<br />
+                    r = 1.0 m<br />
+                    ω = 0.87 rad/s<br />
+                    B = 1.0 T<br />
+                    F_eddy ≈ 0.5 N<br />
+                    τ = 0.5 N·m<br />
+                    t_stop ≈ <strong style="color:#7fc8ff;">870 s</strong> (15 min)
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 5 ACTS ===== -->
+        <h2>🎬 The Capture Sequence (5 Acts)</h2>
+
+        <div class="act">
+            <div class="act-title">ACT I · Approach</div>
+            <div class="act-desc">OVC‑1 matches orbital velocity, closes to 100 m.</div>
+        </div>
+        <div class="act" style="border-left-color:#7fc8ff;">
+            <div class="act-title">ACT II · De‑Tumble</div>
+            <div class="act-desc">Magnetic array activated. 15 minutes later: debris stops spinning.</div>
+        </div>
+        <div class="act" style="border-left-color:#a78bfa;">
+            <div class="act-title">ACT III · Net Deployment</div>
+            <div class="act-desc">Net launches, expands to 50 m diameter, envelops debris.</div>
+        </div>
+        <div class="act" style="border-left-color:#eac76f;">
+            <div class="act-title">ACT IV · Tow &amp; Deorbit</div>
+            <div class="act-desc">Ion thrusters fire retrograde. Perigee lowered to 200 km.</div>
+        </div>
+        <div class="act" style="border-left-color:#ef7a7a;">
+            <div class="act-title">ACT V · Reentry &amp; Burnup</div>
+            <div class="act-desc">Debris burns up in atmosphere. Mission complete. 🌍</div>
+        </div>
+
+        <!-- ===== BUSINESS CASE ===== -->
+        <h2>💰 Business Case: OTaaS (Orbital Towing‑as‑a‑Service)</h2>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr><th>Customer</th><th>Annual Premium</th><th>Removal Fee</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Mega‑Constellations (OneWeb, Starlink)</td><td>$500K / sat</td><td>$15M</td></tr>
+                    <tr><td>National Governments</td><td>$10M / year</td><td>$25M</td></tr>
+                    <tr><td>Private Satellite Operators</td><td>$100K / year</td><td>$5M</td></tr>
+                    <tr><td>Insurance Companies (Lloyd’s)</td><td>$5M / year</td><td>$20M</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div style="background:#0f1a2e;border-radius:12px;padding:0.8rem 1.2rem;border:1px solid #2f4368;margin-top:0.3rem;">
+            <span style="color:#aac3e8;"><strong>Projected Year 1 Revenue:</strong> $150M &nbsp;·&nbsp; <strong>Launch Cost:</strong> $5M &nbsp;·&nbsp; <strong>Build Cost:</strong> $20M</span>
+            <span style="color:#6fdfb0;margin-left:0.8rem;">▲ Profit: $125M</span>
+            <span style="font-size:0.65rem;color:#5a7a9a;margin-left:1rem;">(vibes‑based, not audited)</span>
+        </div>
+
+        <!-- ===== REPO STRUCTURE ===== -->
+        <h2>📁 Repo Structure</h2>
+        <div class="repo-structure">
+            ovc‑1/<br />
+            ├── <span class="file">README.md</span><br />
+            ├── <span class="file">LICENSE</span><br />
+            ├── <span class="folder">docs/</span><br />
+            │&nbsp;&nbsp;├── mission_brief.md<br />
+            │&nbsp;&nbsp;├── technical_specs.md<br />
+            │&nbsp;&nbsp;└── business_case.md<br />
+            ├── <span class="folder">sims/</span><br />
+            │&nbsp;&nbsp;├── eddy_current.py<br />
+            │&nbsp;&nbsp;├── net_deployment.py<br />
+            │&nbsp;&nbsp;└── orbital_mechanics.py<br />
+            ├── <span class="folder">assets/</span><br />
+            │&nbsp;&nbsp;├── mission_patch.txt<br />
+            │&nbsp;&nbsp;└── diagrams.txt<br />
+            └── <span class="folder">data/</span><br />
+                &nbsp;&nbsp;&nbsp;├── debris_catalog.csv<br />
+                &nbsp;&nbsp;&nbsp;└── orbits.json
+        </div>
+
+        <!-- ===== CONTRIBUTE ===== -->
+        <h2>🤝 How to Contribute</h2>
+        <ul style="color:#a0b4d0;padding-left:1.4rem;">
+            <li><strong>CODE:</strong> Write a Python simulation for eddy‑current braking (<code>sims/eddy_current.py</code>) using numpy + matplotlib.</li>
+            <li><strong>DESIGN:</strong> Create better ASCII diagrams or a real mission patch.</li>
+            <li><strong>DATA:</strong> Pull real debris tracking from Space‑Track.org or ESA’s DISCOS.</li>
+            <li><strong>FINANCE:</strong> Make the OTaaS model actually credible.</li>
+            <li><strong>BRAIN:</strong> Propose a wild new removal method (bonus points for gorillas).</li>
+        </ul>
+        <div style="background:#0a0e1c;border-radius:10px;padding:0.6rem 1.2rem;margin-top:0.8rem;border:1px solid #1f2d44;font-size:0.85rem;color:#7a8aa8;">
+            ⚡ PR checklist: Does it make space safer? &nbsp;·&nbsp; Is it cool? &nbsp;·&nbsp; Is the math ≥70% correct? &nbsp;·&nbsp; Did you include a meme?
+        </div>
+
+        <!-- ===== LICENSE ===== -->
+        <h2>📜 License</h2>
+        <div style="background:#0f1424;border-radius:12px;padding:1rem 1.6rem;border:1px solid #2f4368;color:#a0b4d0;">
+            <strong>“Please Don’t Let Humanity Die in a Kessler Cascade” License</strong><br />
+            ✅ Use it. ✅ Modify it. ✅ Deploy it. ✅ Make memes.<br />
+            ❌ Don’t create more debris. ❌ Don’t monetize without sharing profits.
+        </div>
+
+        <!-- ===== FOOTER ===== -->
+        <div class="footer-meta">
+            <div>
+                <span class="stars">⭐ Star this repo if you want clean orbits</span><br />
+                <span style="font-size:0.75rem;">“One star = one less piece of debris” (not true, but it feels right)</span>
+            </div>
+            <div style="text-align:right;">
+                🚀 OVC‑1 · Because the final frontier deserves a mop.<br />
+                <span style="font-size:0.7rem;">Made with ❤️, ☕, and a deep fear of Kessler Syndrome.</span>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
