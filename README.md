@@ -61,6 +61,4 @@ OVC-1 is a satellite concept that captures and deorbits space debris using:
 
 **Year 1 Revenue:** $150M | **Profit:** ~$125M
 
----
-
-## 📁 Repo Structure
+ 
